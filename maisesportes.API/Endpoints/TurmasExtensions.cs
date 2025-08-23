@@ -1,15 +1,18 @@
 ﻿using maisesportes.Shared.Dados;
 using maisesportes.Shared.Modelos;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore; // 👈 necessário
 
 public static class TurmasExtensions
 {
     public record TurmaRequest(string Modalidade, string Professor, string Horario, string Letra);
+
+    // Mantenha o DTO da API simples: nomes dos alunos (strings)
     public record TurmaResponse(int Id, string Modalidade, string Professor, string Horario, string Letra, List<string> Alunos);
 
     public static void MapTurmasEndpoints(this WebApplication app)
     {
-        // Criar turma
+        // Criar turma (como já estava)
         app.MapPost("/Turmas", ([FromServices] DAL<Turma> dal, [FromBody] TurmaRequest request) =>
         {
             var turma = new Turma
@@ -24,22 +27,20 @@ public static class TurmasExtensions
             return Results.Created($"/Turmas/{turma.Id}", EntityToResponse(turma));
         });
 
-        // Listar turmas
-        app.MapGet("/Turmas", ([FromServices] DAL<Turma> dal) =>
+        // ✅ Listar turmas (agora trazendo alunos!)
+        app.MapGet("/Turmas", async ([FromServices] maisEsportesContext context) =>
         {
-            var turmas = dal.Listar().Select(t => EntityToResponse(t));
+            var turmas = await context.Turmas
+                .Include(t => t.AlunosRegistrados)
+                .AsNoTracking()
+                .Select(t => EntityToResponse(t))
+                .ToListAsync();
+
             return Results.Ok(turmas);
         });
 
-        //// Adicionar turmas
-        //app.MapPost("/Turmas", ([FromServices] DAL<Turma> dal, [FromBody] Turma turma) =>
-        //{
-        //    dal.Adicionar(turma);
-        //    return Results.Created($"/Turmas/{turma.Id}", turma);
-        //});
-
-            // Buscar turma com alunos
-            app.MapGet("/Turmas/{id}", ([FromServices] DAL<Turma> dal, int id) =>
+        // Buscar turma por id (pode manter com DAL porque seu DAL já carrega alunos)
+        app.MapGet("/Turmas/{id}", ([FromServices] DAL<Turma> dal, int id) =>
         {
             var turma = dal.RecuperarComAlunos(t => t.Id == id);
             return turma is not null ? Results.Ok(EntityToResponse(turma)) : Results.NotFound();
@@ -56,11 +57,17 @@ public static class TurmasExtensions
             turma.Letra = turmaAtualizada.Letra;
 
             dal.Atualizar(turma);
-            return Results.Ok(turma);
+            return Results.Ok(EntityToResponse(turma));
         });
     }
 
     private static TurmaResponse EntityToResponse(Turma turma) =>
-        new(turma.Id, turma.Modalidade, turma.Professor, turma.Horario, turma.Letra,
-            turma.AlunosRegistrados?.Select(a => a.Nome).ToList() ?? new List<string>());
+        new(
+            turma.Id,
+            turma.Modalidade,
+            turma.Professor,
+            turma.Horario,
+            turma.Letra,
+            turma.AlunosRegistrados?.Select(a => a.Nome).ToList() ?? new()
+        );
 }

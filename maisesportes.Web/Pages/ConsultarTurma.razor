@@ -28,13 +28,28 @@
 
     @if (turma is not null)
     {
-        <MudPaper Class="mt-6 p-4">
+        <MudCard Outlined="true">
+            <MudCardContent>
             <p><b>Modalidade:</b> @turma.Modalidade</p>
             <p><b>Professor:</b> @turma.Professor</p>
             <p><b>Horario:</b> @turma.Horario</p>
             <p><b>Letra:</b> @turma.Letra</p>
-            <p><b>Alunos: </b> @turma.AlunosRegistrados</p>
-        </MudPaper>
+            <p><b>Alunos:</b></p>
+            @if (turma.Alunos?.Any() == true)
+            {
+                <ul>
+                    @foreach (var nome in turma.Alunos)
+                    {
+                        <li>@nome</li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <i>Nenhum aluno registrado</i>
+            }
+            </MudCardContent>
+        </MudCard>
     }
     else if (consultaRealizada)
     {
