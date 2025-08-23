@@ -1,0 +1,70 @@
+﻿@page "/CadastrarAluno"
+@inject AlunoAPI alunoAPI
+@inject NavigationManager navigationManager
+
+<MudPaper Class="px-8 pt-2 pb-4 mx-12 my-8" Justify="Justify.Center">
+
+    <MudText Class="mt-8" Typo="Typo.h4">Cadastro do Aluno</MudText>
+
+    <MudForm>
+
+        <MudTextField Class="mt-4" T="string" Placeholder="Nome do Aluno"
+                      Variant="Variant.Text"
+                      @bind-Value="nome"
+                      Required="true"
+                      RequiredError="Campo obrigatório." />
+
+        <MudNumericField Class="mt-4" T="int?" Placeholder="Idade do Aluno"
+                      Variant="Variant.Text"
+                      @bind-Value="idade"
+                      Lines="1"
+                      Required="true"
+                      RequiredError="Campo obrigatório." />
+
+        <MudTextField Class="mt-4" T="string" Placeholder="Email do Aluno"
+                      Variant="Variant.Text"
+                      @bind-Value="email"
+                      Required="true"
+                      RequiredError="Campo obrigatório." />
+
+        <MudTextField Class="mt-4" T="string" Placeholder="Endereço do Aluno"
+                      Variant="Variant.Text"
+                      @bind-Value="endereco"
+                      Required="true"
+                      RequiredError="Campo obrigatório." />
+
+        <MudNumericField T="int?" Class="mt-4" Placeholder="Turma do Aluno"
+                         Variant="Variant.Text"
+                         @bind-Value="turmaId"
+                         Required="true"
+                         RequiredError="Campo obrigatório." />
+
+        <div class="d-flex align-center justify-space-between mt-4">
+            <MudButton Variant="Variant.Filled"
+                       @onclick="Cadastrar"
+                       Color="Color.Primary"
+                       Class="ml-auto">
+                Cadastrar
+            </MudButton>
+        </div>
+
+    </MudForm>
+</MudPaper>
+
+
+@code {
+    
+    private string? nome;
+    private int? idade;
+    private string? email;
+    private string? endereco;
+    private int? turmaId;
+
+    private async Task Cadastrar()
+    {
+        var request = new AlunoRequest(nome!, idade?? 0, email!, endereco!, turmaId?? 0);
+        await alunoAPI.AddAlunoAsync(request);
+        navigationManager.NavigateTo("/Alunos");
+    }
+
+}

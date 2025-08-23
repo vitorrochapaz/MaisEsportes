@@ -10,18 +10,16 @@ using System.Threading.Tasks;
 
 namespace maisesportes.Shared.Dados;
 
-    public class maisEsportesContext: DbContext
+public class maisEsportesContext : DbContext
+{
+    public DbSet<Aluno> Alunos { get; set; }
+    public DbSet<Professor> Professores { get; set; }
+    public DbSet<Turma> Turmas { get; set; }
+
+    private string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=maisEsportesV0;Integrated Security=True;Encrypt=False;";
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        public DbSet<Aluno> Alunos {  get; set; }
-        public DbSet<Professor> Professores { get; set; }
-        public DbSet<Turma> Turmas { get; set; }
-
-
-        private string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=maisEsportesV0;Integrated Security=True;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False";
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer(connectionString);
-        }
-               
+        optionsBuilder.UseSqlServer(connectionString);
     }
+}

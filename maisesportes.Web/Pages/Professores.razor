@@ -1,0 +1,34 @@
+﻿@page "/Professores"
+@inject ProfessorAPI professorAPI
+<h3>Professores</h3>
+@if (professores is null)
+{
+    <p>Carregando...</p>
+}
+else if (!professores.Any())
+{
+    <p>Nenhum professor encontrado.</p>
+}
+else
+{
+    foreach (var professor in professores)
+    {
+        <p>@professor.Nome</p>
+    }
+}
+
+@code {
+    private ICollection<ProfessorResponse>? professores;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            professores = await professorAPI.GetProfessorAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"❌ Erro ao buscar professores: {ex.Message}");
+        }
+    }
+}

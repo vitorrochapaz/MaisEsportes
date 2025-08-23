@@ -1,0 +1,34 @@
+﻿@page "/Turmas"
+@inject TurmaAPI turmaAPI
+<h3>Turmas</h3>
+@if (turmas is null)
+{
+    <p>Carregando...</p>
+}
+else if (!turmas.Any())
+{
+    <p>Nenhum aluno encontrado.</p>
+}
+else
+{
+    foreach (var turma in turmas)
+    {
+        <p><b>Modalidade:</b> @turma.Modalidade - <b>Professor:</b> @turma.Professor</p>
+    }
+}
+
+@code {
+    private ICollection<TurmaResponse>? turmas;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            turmas = await turmaAPI.GetTurmasAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"❌ Erro ao buscar alunos: {ex.Message}");
+        }
+    }
+}

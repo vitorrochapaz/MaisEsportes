@@ -1,0 +1,70 @@
+﻿@page "/CadastrarProfessor"
+@inject ProfessorAPI professorAPI
+@inject NavigationManager navigationManager
+
+<MudPaper Class="px-8 pt-2 pb-4 mx-12 my-8" Justify="Justify.Center">
+
+    <MudText Class="mt-8" Typo="Typo.h4">Cadastro do Professor</MudText>
+
+    <MudForm>
+
+        <MudTextField Class="mt-4" T="string" Placeholder="Nome do Professor"
+                      Variant="Variant.Text"
+                      @bind-Value="nome"
+                      Required="true"
+                      RequiredError="Campo obrigatório." />
+
+        <MudNumericField Class="mt-4" T="int?" Placeholder="Idade do Professor"
+                         Variant="Variant.Text"
+                         @bind-Value="idade"
+                         Lines="1"
+                         Required="true"
+                         RequiredError="Campo obrigatório." />
+
+        <MudTextField Class="mt-4" T="string" Placeholder="Email do Professor"
+                      Variant="Variant.Text"
+                      @bind-Value="email"
+                      Required="true"
+                      RequiredError="Campo obrigatório." />
+
+        <MudTextField Class="mt-4" T="string" Placeholder="Endereço do Professor"
+                      Variant="Variant.Text"
+                      @bind-Value="endereco"
+                      Required="true"
+                      RequiredError="Campo obrigatório." />
+
+        <MudTextField T="string" Class="mt-4" Placeholder="Turmas do Professor"
+                         Variant="Variant.Text"
+                         @bind-Value="turmas"
+                         Required="true"
+                         RequiredError="Campo obrigatório." />
+
+        <div class="d-flex align-center justify-space-between mt-4">
+            <MudButton Variant="Variant.Filled"
+                       @onclick="Cadastrar"
+                       Color="Color.Primary"
+                       Class="ml-auto">
+                Cadastrar
+            </MudButton>
+        </div>
+
+    </MudForm>
+</MudPaper>
+
+
+@code {
+
+    private string? nome;
+    private int? idade;
+    private string? email;
+    private string? endereco;
+    private string? turmas;
+
+    private async Task Cadastrar()
+    {
+        var request = new ProfessorRequest(nome!, idade ?? 0, email!, endereco!, turmas!);
+        await professorAPI.AddProfessorAsync(request);
+        navigationManager.NavigateTo("/Professores");
+    }
+
+}

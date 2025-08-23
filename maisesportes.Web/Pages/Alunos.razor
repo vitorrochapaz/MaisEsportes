@@ -1,6 +1,34 @@
 ﻿@page "/Alunos"
+@inject AlunoAPI alunoAPI
 <h3>Alunos</h3>
+@if (alunos is null)
+{
+    <p>Carregando...</p>
+}
+else if (!alunos.Any())
+{
+    <p>Nenhum aluno encontrado.</p>
+}
+else
+{
+    foreach (var aluno in alunos)
+    {
+        <p>@aluno.Nome</p>
+    }
+}
 
 @code {
+    private ICollection<AlunoResponse>? alunos;
 
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            alunos = await alunoAPI.GetAlunosAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"❌ Erro ao buscar alunos: {ex.Message}");
+        }
+    }
 }

@@ -31,8 +31,15 @@ public static class TurmasExtensions
             return Results.Ok(turmas);
         });
 
-        // Buscar turma com alunos
-        app.MapGet("/Turmas/{id}", ([FromServices] DAL<Turma> dal, int id) =>
+        //// Adicionar turmas
+        //app.MapPost("/Turmas", ([FromServices] DAL<Turma> dal, [FromBody] Turma turma) =>
+        //{
+        //    dal.Adicionar(turma);
+        //    return Results.Created($"/Turmas/{turma.Id}", turma);
+        //});
+
+            // Buscar turma com alunos
+            app.MapGet("/Turmas/{id}", ([FromServices] DAL<Turma> dal, int id) =>
         {
             var turma = dal.RecuperarComAlunos(t => t.Id == id);
             return turma is not null ? Results.Ok(EntityToResponse(turma)) : Results.NotFound();

@@ -1,39 +1,19 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">+esportes.Web</a>
-        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-    </div>
-</div>
+﻿﻿﻿<MudNavMenu Class="mud-width-full mt-4">
 
-<div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="weather">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
-            </NavLink>
-        </div>
-    </nav>
-</div>
-
-@code {
-    private bool collapseNavMenu = true;
-
-    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
-    private void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
-    }
-}
+    <MudNavLink Href="/" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
+    <MudNavGroup Title="Alunos" Icon="@Icons.Material.Filled.People" Expanded="true">
+        <MudNavLink Href="/Alunos">Exibir</MudNavLink>
+        <MudNavLink Href="/CadastrarAluno">Cadastrar</MudNavLink>
+        <MudNavLink Href="/ConsultarAluno">Consultar</MudNavLink>
+    </MudNavGroup>
+    <MudNavGroup Title="Professores" Icon="@Icons.Material.Filled.People" Expanded="true">
+        <MudNavLink Href="/Professores">Exibir</MudNavLink>
+        <MudNavLink Href="/CadastrarProfessor">Cadastrar</MudNavLink>
+        <MudNavLink Href="/ConsultarProfessor">Consultar</MudNavLink>
+    </MudNavGroup>
+    <MudNavGroup Title="Turmas" Icon="@Icons.Material.Filled.Sports" Expanded="true">
+        <MudNavLink Href="/Turmas">Exibir</MudNavLink>
+        <MudNavLink Href="/CadastrarTurma">Cadastrar</MudNavLink>
+        <MudNavLink Href="/ConsultarTurma">Consultar</MudNavLink>
+    </MudNavGroup>
+</MudNavMenu>

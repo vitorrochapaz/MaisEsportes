@@ -47,8 +47,4 @@ public class DAL<T> where T : class
             .Include(t => t.AlunosRegistrados)
             .FirstOrDefault(predicate);
     }
-
-
-
-
 }

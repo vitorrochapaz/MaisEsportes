@@ -1,0 +1,60 @@
+﻿@page "/ConsultarProfessor"
+@inject ProfessorAPI professorAPI
+@inject NavigationManager navigationManager
+
+<MudPaper Class="px-8 pt-2 pb-4 mx-12 my-8" Justify="Justify.Center">
+
+    <MudText Class="mt-8" Typo="Typo.h4">Consulta de Professor</MudText>
+
+    <MudForm>
+
+        <MudNumericField Class="mt-4" T="int?" Placeholder="Digite a ID do Professor"
+                         Variant="Variant.Text"
+                         @bind-Value="Id"
+                         Lines="1"
+                         Required="true"
+                         RequiredError="Campo obrigatório." />
+
+        <div class="d-flex align-center justify-space-between mt-4">
+            <MudButton Variant="Variant.Filled"
+                       @onclick="Consultar"
+                       Color="Color.Primary"
+                       Class="ml-auto">
+                Consultar
+            </MudButton>
+        </div>
+
+    </MudForm>
+
+    @if (professor is not null)
+    {
+        <MudPaper Class="mt-6 p-4">
+            <p><b>Nome:</b> @professor.Nome</p>
+            <p><b>Idade:</b> @professor.Idade</p>
+            <p><b>Email:</b> @professor.Email</p>
+            <p><b>Endereço:</b> @professor.Endereco</p>
+            <p><b>Turma:</b> @professor.Turmas</p>
+        </MudPaper>
+    }
+    else if (consultaRealizada)
+    {
+        <MudText Color="Color.Error">Professor não encontrado.</MudText>
+    }
+
+</MudPaper>
+
+
+@code {
+    private int? Id { get; set; }
+    private ProfessorResponse? professor;
+    private bool consultaRealizada = false;
+
+    private async Task Consultar()
+    {
+        if (Id is null)
+            return;
+
+        professor = await professorAPI.GetProfessorPorIdAsync(Id.Value);
+        consultaRealizada = true;
+    }
+}

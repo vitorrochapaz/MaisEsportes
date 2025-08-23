@@ -1,0 +1,60 @@
+﻿@page "/ConsultarTurma"
+@inject TurmaAPI turmaAPI
+@inject NavigationManager navigationManager
+
+<MudPaper Class="px-8 pt-2 pb-4 mx-12 my-8" Justify="Justify.Center">
+
+    <MudText Class="mt-8" Typo="Typo.h4">Consulta de Turma</MudText>
+
+    <MudForm>
+
+        <MudNumericField Class="mt-4" T="int?" Placeholder="Digite a ID da Turma"
+                         Variant="Variant.Text"
+                         @bind-Value="Id"
+                         Lines="1"
+                         Required="true"
+                         RequiredError="Campo obrigatório." />
+
+        <div class="d-flex align-center justify-space-between mt-4">
+            <MudButton Variant="Variant.Filled"
+                       @onclick="Consultar"
+                       Color="Color.Primary"
+                       Class="ml-auto">
+                Consultar
+            </MudButton>
+        </div>
+
+    </MudForm>
+
+    @if (turma is not null)
+    {
+        <MudPaper Class="mt-6 p-4">
+            <p><b>Modalidade:</b> @turma.Modalidade</p>
+            <p><b>Professor:</b> @turma.Professor</p>
+            <p><b>Horario:</b> @turma.Horario</p>
+            <p><b>Letra:</b> @turma.Letra</p>
+            <p><b>Alunos: </b> @turma.AlunosRegistrados</p>
+        </MudPaper>
+    }
+    else if (consultaRealizada)
+    {
+        <MudText Color="Color.Error">Turma não encontrado.</MudText>
+    }
+
+</MudPaper>
+
+
+@code {
+    private int? Id { get; set; }
+    private TurmaResponse? turma;
+    private bool consultaRealizada = false;
+
+    private async Task Consultar()
+    {
+        if (Id is null)
+            return;
+
+        turma = await turmaAPI.GetTurmaPorIdAsync(Id.Value);
+        consultaRealizada = true;
+    }
+}

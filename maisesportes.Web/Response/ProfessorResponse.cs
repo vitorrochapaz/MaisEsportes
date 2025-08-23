@@ -1,3 +1,3 @@
-﻿namespace maisesportes.API.Response;
+﻿namespace maisesportes.Web.Response;
 
-public record ProfessorResponse(string Nome, int idade, string email, string endereco, string turmas);
+public record ProfessorResponse(string Nome, int Idade, string Email, string Endereco, string Turmas);

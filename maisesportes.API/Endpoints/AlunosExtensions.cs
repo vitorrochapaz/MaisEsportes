@@ -35,10 +35,15 @@ public static class AlunosExtensions
         });
 
         // Buscar aluno por ID
-        app.MapGet("/Alunos/{id}", ([FromServices] DAL<Aluno> dal, int id) =>
+        app.MapGet("/Alunos/{id}", async ([FromServices] maisEsportesContext context, int id) =>
         {
-            var aluno = dal.Recuperar(a => a.Id == id);
-            return aluno is not null ? Results.Ok(EntityToResponse(aluno)) : Results.NotFound();
+            var aluno = await context.Alunos
+                .Include(a => a.Turma) // garante que a turma vem junto
+                .FirstOrDefaultAsync(a => a.Id == id);
+
+            return aluno is not null
+                ? Results.Ok(aluno.EntityToResponse())
+                : Results.NotFound();
         });
     }
     public static AlunoResponse EntityToResponse(this Aluno aluno)
